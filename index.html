@@ -1032,10 +1032,37 @@ function bindSwipe() {
   }, { passive: true });
 }
 
+/* ============ Sample article (seeded once on first launch) ============ */
+const SampleArticle = {
+  SEED_KEY: 'reader_seeded_v1',
+  data: [
+    ["Every morning, a small fishing boat leaves the harbor before the sun rises.", "매일 아침, 작은 고깃배 한 척이 해가 뜨기 전에 항구를 떠난다."],
+    ["The captain has sailed these waters for more than thirty years.", "선장은 30년 넘게 이 바다를 항해해 왔다."],
+    ["He knows the currents the way most people know their own street.", "그는 대부분의 사람들이 자기 동네 골목을 알듯이 이 물길을 안다."],
+    ["Fewer young people want to continue this kind of work today.", "요즘은 이런 일을 계속하려는 젊은 사람이 점점 줄고 있다."],
+    ["Still, he wakes up early every day, ready to go back out to sea.", "그럼에도 그는 매일 새벽에 일어나 다시 바다로 나갈 준비를 한다."],
+    ["For him, the sea is not just a job, but a way of life.", "그에게 바다는 단순한 직업이 아니라 삶의 방식이다."]
+  ],
+  ensureSeeded() {
+    if (localStorage.getItem(this.SEED_KEY)) return;
+    localStorage.setItem(this.SEED_KEY, '1');
+    if (Store.all().length) return; // don't intrude if user already has content
+    const article = {
+      id: 'a_sample_' + Date.now().toString(36),
+      title: '예제: 새벽 어부 이야기 (기본 제공)',
+      createdAt: Date.now(),
+      index: 0,
+      sentences: this.data.map((pair, i) => ({ id: 's' + i, en: pair[0], ko: pair[1], status: 'done' }))
+    };
+    Store.upsert(article);
+  }
+};
+
 /* ============ Init ============ */
 window.addEventListener('DOMContentLoaded', () => {
   Settings.load();
   SettingsUI.applyTheme();
+  SampleArticle.ensureSeeded();
 
   $('import-text').addEventListener('input', () => Importer.updatePreview());
   $('import-file').addEventListener('change', e => Importer.handleFile(e.target.files[0]));

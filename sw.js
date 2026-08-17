@@ -1,7 +1,7 @@
 // 영어 리더 - Service Worker
 // 파일을 수정한 뒤에는 CACHE_VERSION을 올려서(v2, v3...) 재업로드하면
 // 이전 캐시가 자동으로 정리되고 새 버전이 반영됩니다.
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const CACHE_NAME = `english-reader-${CACHE_VERSION}`;
 
 const APP_SHELL = [
